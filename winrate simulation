@@ -1,0 +1,57 @@
+import random
+
+numOfPlayers = 100
+
+allPlayers = {}
+allWinrates = []
+
+for x in range(numOfPlayers):
+    allPlayers[str(x)] = [0, 0] #Adding players to the dictionary, with the value representing the number of wins and losses each player currently has, in the form of [wins, losses]
+
+for numOfMatches in range(5000): #The number of matches there will be
+
+    bothTeams = random.sample(sorted(allPlayers.keys()), 24) #Assigning 12 different players to each team
+    team1 = bothTeams[0:len(bothTeams)//2]
+    team2 = bothTeams[len(bothTeams)//2:len(bothTeams)]
+
+    if "0" in team1:
+        if random.randint(0, 9) < 6: #There is a 60% chance of Team1 winning, if "0" is on Team1
+            team1Win = True
+        else:
+            team1Win = False
+    elif "0" in team2:
+        if random.randint(0, 9) < 4: #There is a 40% chance of Team1 winning, if "0" is on Team2
+            team1Win = True
+        else:
+            team1Win = False
+    else:
+        if random.randint(0, 9) < 5: #There is a 50% chance of Team1 winning, if "0" is not on either team
+            team1Win = True
+        else:
+            team1Win = False
+
+    if team1Win == True:
+        for players1 in team1:
+            allPlayers[players1][0] += 1 #Recording the number of times each player won and lost
+        for players2 in team2:
+            allPlayers[players2][1] += 1
+
+    if team1Win == False:
+        for players1 in team1:
+            allPlayers[players1][1] += 1
+        for players2 in team2:
+            allPlayers[players2][0] += 1
+
+print(allPlayers)
+
+for player in sorted(allPlayers.keys()): #Calculating winrate for each player
+    winrate = allPlayers[player][0] / (allPlayers[player][0] + allPlayers[player][1]) * 100
+    allWinrates.append(winrate)
+
+    print("Winrate of player", player, "is", str(winrate) + "%")
+
+averageWinrate = sum(allWinrates) / len(allWinrates)
+
+print("Average winrate:", averageWinrate)
+
+    
